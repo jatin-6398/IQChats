@@ -1,25 +1,26 @@
-import os
 import telebot
 from flask import Flask, request
 
-TOKEN = os.environ.get("BOT_TOKEN")
+TOKEN = "8181288340:AAG8JEa2GXGstmgt1yzCrBJzhCkEweiBtl0"
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "👋 Hello! iQsmart bot is now running 24/7 on Render with GitHub deployment! 🔥")
-
-@app.route(f"/{TOKEN}", methods=["POST"])
+@app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return "OK", 200
+    json_str = request.get_data().decode('UTF-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return 'ok', 200
 
-@app.route("/")
-def home():
-    return "iQsmart Bot is Live!", 200
+@app.route('/')
+def index():
+    return '🤖 IQsmart bot is live on Render!'
 
-if __name__ == "__main__":
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, "👋 Hello! IQsmart bot is now running 24/7 on Render with GitHub deployment! 🔥")
+
+if __name__ == '__main__':
     bot.remove_webhook()
-    bot.set_webhook(url=f"https://<RENDER-URL>.onrender.com/{TOKEN}")
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    bot.set_webhook(url=f"https://iqchats.onrender.com/{TOKEN}")
+    app.run(host="0.0.0.0", port=10000)
