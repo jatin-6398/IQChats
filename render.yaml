@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: iqsmart
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python main.py"
+    envVars:
+      - key: BOT_TOKEN
+        value: 8181288340:AAG8JEa2GXGstmgt1yzCrBJzhCkEweiBtl0
